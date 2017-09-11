@@ -19,13 +19,27 @@ const mailgunSender = `Moonshot Chatbot Failsafe Admin <${process.env
 
 let bot = controller.spawn({});
 
+function getServiceNameFromNumber(number) {
+  switch (number) {
+    case '+18162989138':
+      return 'Carmen';
+      break;
+    case '+18165278439':
+      return 'Mapkins';
+    default:
+      return number;
+  }
+}
+
 function asyncContactAdmin(adminEmail, message) {
   return new Promise((resolve, reject) => {
+    const service = getServiceNameFromNumber(message.to);
+
     const data = {
       from: mailgunSender,
       to: adminEmail,
       subject: 'Chatbot Failsafe Alert',
-      text: `Message '${message.text}' received from user ${message.from}, but ${message.to} is currently down.`
+      text: `Message '${message.text}' received from user ${message.from}, but ${service} is currently down.`
     };
 
     mailgunClient.messages().send(data, (err, body) => {
